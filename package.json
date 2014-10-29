@@ -35,6 +35,7 @@
   },
   "keywords": [],
   "dependencies": {
+    "git-rev": "^0.2.1",
     "request": "^2.46.0"
   }
 }

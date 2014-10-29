@@ -37,6 +37,8 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadTasks('lib');
+
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
