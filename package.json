@@ -33,7 +33,7 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt": "~0.4.5"
   },
-  "keywords": [],
+  "keywords": ['gruntplugin', 'crowdin'],
   "dependencies": {
     "bluebird": "^2.3.11",
     "git-rev": "^0.2.1",

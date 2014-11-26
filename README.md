@@ -28,7 +28,7 @@ Task targets, files and options may be specified according to the grunt [Configu
 
 #### api-key
 
-Type: `String`
+Type: `String`  
 Default: `''`
 
 Your Crowdin API key. Remember to keep it secret!
@@ -36,7 +36,7 @@ Your Crowdin API key. Remember to keep it secret!
 
 #### project-identifier
 
-Type: `String`
+Type: `String`  
 Default: `''`
 
 The name of your project at Crowdin. What you access at https://crowdin.com/project/<my-project-name>
@@ -53,7 +53,7 @@ Use `#GIT_BRANCH#` to insert the branch name.
 
 #### srcFile
 
-Type: `String`
+Type: `String`  
 Default: `''`
 
 The location of the file to be uploaded, relative to `Gruntfile.js`
@@ -62,7 +62,7 @@ The location of the file to be uploaded, relative to `Gruntfile.js`
 
 #### outputDir
 
-Type: `String`
+Type: `String`  
 Default: `''`
 
 The folder where translations should be downloaded to. This will extract the .zip from Crowdin and create subdirectories for each locale contained therein.
@@ -90,4 +90,14 @@ var config = {
 };
 
 grunt.initConfig(config);
+```
+
+## Usage
+
+```sh
+grunt crowdin-request:upload
+```
+
+```sh
+grunt crowdin-request:download
 ```
