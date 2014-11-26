@@ -20,7 +20,7 @@
       "url": "https://github.com/cloakedninjas/grunt-crowdin-request/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/grunt-crowdin-request",
+  "main": "lib/crowdin-request",
   "engines": {
     "node": ">= 0.8.0"
   },
