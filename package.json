@@ -1,7 +1,7 @@
 {
   "name": "grunt-crowdin-request",
   "description": "Grunt plugin to upload and download translations to Crowdin",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "homepage": "https://github.com/cloakedninjas/grunt-crowdin-request",
   "author": {
     "name": "Daniel Jackson",
@@ -23,7 +23,6 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "main": "Gruntfile.js",
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",
     "grunt": "~0.4.5"
