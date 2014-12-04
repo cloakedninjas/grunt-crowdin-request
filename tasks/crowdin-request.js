@@ -56,7 +56,12 @@ module.exports = function(grunt) {
             grunt.verbose.writeln('Crowdin export result: ', response.success);
           })
           .then(function () {
-            crowdin.unzipTranslations(self.data.outputDir);
+            return crowdin.unzipTranslations(self.data.outputDir);
+          })
+          .then(function () {
+            if (self.data.renameFileTo) {
+              return crowdin.renamePoFiles(self.data.outputDir, self.data.renameFileTo);
+            }
           })
           .catch(Error, function (e) {
             grunt.fail.fatal(e);
@@ -284,5 +289,50 @@ module.exports = function(grunt) {
     formData['files[' + remoteFilename + ']'] = fs.createReadStream(config.uploadOptions.srcFile);
 
     return this.postRequest(apiMethod, formData);
+  };
+
+  /**
+   * Rename files from Crowdin
+   *
+   * @param {String} outputDir
+   * @param {String} renameFileTo
+   * @returns {Promise}
+   */
+  Crowdin.prototype.renamePoFiles = function (outputDir, renameFileTo) {
+
+    return new Promise(function(resolve, reject) {
+
+      fs.readdir(outputDir, function (err, files) {
+        if (err !== null) {
+          reject(new Error(err));
+        }
+        else {
+          var dir, poFile, parts, newFilename, i, j, len, lenJ, poFiles;
+
+          for (i = 0, len = files.length; i < len; i++) {
+            dir = outputDir + '/' + files[i];
+
+            if (fs.lstatSync(dir).isDirectory()) {
+              poFiles = fs.readdirSync(dir);
+
+              for (j = 0, lenJ = poFiles.length; j < lenJ; j++) {
+                poFile = poFiles[j];
+                parts = poFile.match(/(\w+)-(.+)\.po/);
+
+                if (parts.length === 3) {
+                  newFilename = renameFileTo.replace('#LOCALE#', parts[2]);
+
+                  grunt.verbose.writeln('Renaming: ' + poFile + ' to ' + newFilename);
+
+                  fs.renameSync(dir + '/' + poFile, dir + '/' + newFilename);
+                }
+              }
+            }
+          }
+          resolve();
+        }
+      });
+
+    });
   }
 };

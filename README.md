@@ -67,6 +67,15 @@ Default: `''`
 
 The folder where translations should be downloaded to. This will extract the .zip from Crowdin and create subdirectories for each locale contained therein.
 
+#### renameFileTo
+
+Type: `String`  
+Default: `''`
+
+If provided will rename the download files from Crowdin to be renamed to something different than what they were uploaded as. The use case being you upload with a Git branch filename
+But want to download to a single consistent filename.
+
+
 ## Sample config
 
 ```javascript
@@ -84,7 +93,8 @@ var config = {
         },
 
         download: {
-            outputDir: 'i18n'
+            outputDir: 'i18n',
+            renameFileTo: 'messages-#LOCALE#.po'
         }
     }
 };
