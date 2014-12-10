@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 
         var remoteFilename;
 
-        crowdin.getUploadFilename(config)
+        crowdin.getUploadFilename(this.options().filename)
           .then(function (filename) {
             remoteFilename = filename;
             return crowdin.getStatus();
@@ -60,7 +60,7 @@ module.exports = function(grunt) {
           })
           .then(function () {
             if (self.data.renameFileTo) {
-              return crowdin.renamePoFiles(self.data.outputDir, self.data.renameFileTo);
+              return crowdin.renamePoFiles(self.options().filename, self.data.outputDir, self.data.renameFileTo);
             }
           })
           .catch(Error, function (e) {
@@ -90,25 +90,25 @@ module.exports = function(grunt) {
 
   /**
    *
-   * @param {Object} config
+   * @param {String} filename
    * @returns {Promise}
    */
-  Crowdin.prototype.getUploadFilename = function (config) {
+  Crowdin.prototype.getUploadFilename = function (filename) {
     var gitPattern = '#GIT_BRANCH#';
 
     return new Promise(function(resolve) {
-      if (config.uploadOptions.filename.indexOf(gitPattern) !== -1) {
+      if (filename.indexOf(gitPattern) !== -1) {
         var git = require('git-rev');
 
         // get the current branch name from Git
         git.branch(function (branchName) {
           grunt.verbose.writeln('Detected git branch: ' + branchName);
 
-          resolve(config.uploadOptions.filename.replace(gitPattern, branchName));
+          resolve(filename.replace(gitPattern, branchName));
         })
       }
       else {
-        resolve(config.uploadOptions.filename);
+        resolve(filename);
       }
     });
   };
@@ -294,45 +294,60 @@ module.exports = function(grunt) {
   /**
    * Rename files from Crowdin
    *
+   * @param {Object} uploadConfig
    * @param {String} outputDir
    * @param {String} renameFileTo
    * @returns {Promise}
    */
-  Crowdin.prototype.renamePoFiles = function (outputDir, renameFileTo) {
+  Crowdin.prototype.renamePoFiles = function (uploadConfig, outputDir, renameFileTo) {
 
-    return new Promise(function(resolve, reject) {
+    return this.getUploadFilename(uploadConfig)
+      .then(function (filename) {
+        return new Promise(function(resolve, reject) {
+          var fileToFind = filename.substring(0, filename.length - 4);
 
-      fs.readdir(outputDir, function (err, files) {
-        if (err !== null) {
-          reject(new Error(err));
-        }
-        else {
-          var dir, poFile, parts, newFilename, i, j, len, lenJ, poFiles;
+          fs.readdir(outputDir, function (err, files) {
+            if (err !== null) {
+              reject(new Error(err));
+            }
+            else {
+              var dir, poFile, parts, newFilename, i, j, len, lenJ, poFiles;
 
-          for (i = 0, len = files.length; i < len; i++) {
-            dir = outputDir + '/' + files[i];
+              for (i = 0, len = files.length; i < len; i++) {
+                dir = outputDir + '/' + files[i];
 
-            if (fs.lstatSync(dir).isDirectory()) {
-              poFiles = fs.readdirSync(dir);
+                if (fs.lstatSync(dir).isDirectory()) {
+                  poFiles = fs.readdirSync(dir);
 
-              for (j = 0, lenJ = poFiles.length; j < lenJ; j++) {
-                poFile = poFiles[j];
-                parts = poFile.match(/(\w+)-(.+)\.po/);
+                  for (j = 0, lenJ = poFiles.length; j < lenJ; j++) {
+                    poFile = poFiles[j];
+                    parts = poFile.match(/(\w+)-(.+)\.po/);
 
-                if (parts.length === 3) {
-                  newFilename = renameFileTo.replace('#LOCALE#', parts[2]);
+                    // ensure we have a .po file
+                    if (parts.length === 3) {
 
-                  grunt.verbose.writeln('Renaming: ' + poFile + ' to ' + newFilename);
+                      // match the upload filename with a file contained in the ZIP
+                      if (poFile === fileToFind + '-' + parts[2] + '.po') {
+                        newFilename = renameFileTo.replace('#LOCALE#', parts[2]);
 
-                  fs.renameSync(dir + '/' + poFile, dir + '/' + newFilename);
+                        grunt.verbose.writeln('Renaming: ' + poFile + ' to ' + newFilename);
+
+                        fs.renameSync(dir + '/' + poFile, dir + '/' + newFilename);
+                      }
+                      else {
+                        // delete this file
+                        grunt.verbose.writeln('Deleting: ' + poFile);
+                        fs.unlinkSync(dir + '/' + poFile);
+                      }
+                    }
+                  }
                 }
               }
+              resolve();
             }
-          }
-          resolve();
-        }
-      });
+          });
 
-    });
+        });
+      });
   }
 };

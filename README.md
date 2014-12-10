@@ -41,8 +41,6 @@ Default: `''`
 
 The name of your project at Crowdin. What you access at https://crowdin.com/project/<my-project-name>
 
-### Upload
-
 #### filename
 
 Type: `String`  
@@ -50,6 +48,8 @@ Default: `''`
 
 The filename to send to Crowdin. Can be anything you like to identify a file. This option can also use the current Git branch you might be on.
 Use `#GIT_BRANCH#` to insert the branch name.
+
+### Upload
 
 #### srcFile
 
@@ -84,11 +84,11 @@ var config = {
 
         options: {
             'api-key': 'xyz123',
-            'project-identifier': 'test-project'
+            'project-identifier': 'test-project',
+            filename: '#GIT_BRANCH#.pot'
         },
 
         upload: {
-            filename: '#GIT_BRANCH#.pot',
             srcFile: 'i18n/translations.pot'
         },
 
