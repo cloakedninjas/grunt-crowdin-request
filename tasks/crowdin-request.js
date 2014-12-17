@@ -326,15 +326,15 @@ module.exports = function(grunt) {
                     // ensure we have a .po file
                     if (parts.length === 3) {
 
+                      newFilename = renameFileTo.replace('#LOCALE#', parts[2]);
+
                       // match the upload filename with a file contained in the ZIP
                       if (poFile === fileToFind + '-' + parts[2] + '.po') {
-                        newFilename = renameFileTo.replace('#LOCALE#', parts[2]);
-
                         grunt.verbose.writeln('Renaming: ' + poFile + ' to ' + newFilename);
 
                         fs.renameSync(dir + '/' + poFile, dir + '/' + newFilename);
                       }
-                      else {
+                      else if (poFile !== newFilename) {
                         // delete this file
                         grunt.verbose.writeln('Deleting: ' + poFile);
                         fs.unlinkSync(dir + '/' + poFile);
