@@ -45,7 +45,13 @@ module.exports = function(grunt) {
             return crowdin.getUpdateEndpoint(remoteFilename, translationStatus);
           })
           .then(function (apiMethod) {
-            crowdin.uploadTranslations(apiMethod, remoteFilename, config);
+            return crowdin.uploadTranslations(apiMethod, remoteFilename, config);
+          })
+          .then(function () {
+              done(true);
+          })
+          .catch(function () {
+              done(false);
           });
 
         break;
@@ -63,7 +69,11 @@ module.exports = function(grunt) {
               return crowdin.renamePoFiles(self.options().filename, self.data.outputDir, self.data.renameFileTo);
             }
           })
+          .then(function () {
+            done(true);
+          })
           .catch(Error, function (e) {
+            done(false);
             grunt.fail.fatal(e);
           });
 
