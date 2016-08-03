@@ -21,7 +21,8 @@ module.exports = function(grunt) {
     var crowdin = new Crowdin({
       endpointUrl: 'https://api.crowdin.com/api',
       apiKey: this.options()['api-key'],
-      projectIndentifier: this.options()['project-identifier']
+      projectIndentifier: this.options()['project-identifier'],
+      branch: this.options()['branch']
     });
 
     var done = this.async();
@@ -214,10 +215,7 @@ module.exports = function(grunt) {
     return this.requestData({
       uri: url,
       method: 'GET',
-      qs: {
-        key: this.config.apiKey,
-        json: 'json'
-      }
+      qs: this.getQueryString()
     });
   };
 
@@ -235,10 +233,7 @@ module.exports = function(grunt) {
       uri: url,
       method: 'POST',
       formData: formData,
-      qs: {
-        json: 'json',
-        key: this.config.apiKey
-      }
+      qs: this.getQueryString()
     });
   };
 
@@ -256,6 +251,9 @@ module.exports = function(grunt) {
    */
   Crowdin.prototype.download = function () {
     var url = this.formUrl('download/all.zip') + '?key=' + this.config.apiKey;
+    if (this.config.branch) {
+      url += '&branch=' + this.config.branch;
+    }
 
     grunt.verbose.writeln('Downloading translations from: ' + url);
 
@@ -360,4 +358,20 @@ module.exports = function(grunt) {
         });
       });
   }
+
+  /**
+   *
+   * @returns {Object}
+   */
+  Crowdin.prototype.getQueryString = function () {
+    var ret = {
+      json: 'json',
+      key: this.config.apiKey
+    };
+    if (this.config.branch) {
+      ret.branch = this.config.branch;
+    }
+    grunt.verbose.writeln('QueryString: ' , ret);
+    return ret;
+  };
 };

@@ -28,7 +28,7 @@ Task targets, files and options may be specified according to the grunt [Configu
 
 #### api-key
 
-Type: `String`  
+Type: `String`
 Default: `''`
 
 Your Crowdin API key. Remember to keep it secret!
@@ -36,24 +36,31 @@ Your Crowdin API key. Remember to keep it secret!
 
 #### project-identifier
 
-Type: `String`  
+Type: `String`
 Default: `''`
 
 The name of your project at Crowdin. What you access at https://crowdin.com/project/<my-project-name>
 
 #### filename
 
-Type: `String`  
+Type: `String`
 Default: `''`
 
 The filename to send to Crowdin. Can be anything you like to identify a file. This option can also use the current Git branch you might be on.
 Use `#GIT_BRANCH#` to insert the branch name.
 
+#### branch
+
+Type: `String`
+Default: `''`
+
+The name of your Crowdin branch. More info about Crowdin branches at https://support.crowdin.com/articles/versions-management/
+
 ### Upload
 
 #### srcFile
 
-Type: `String`  
+Type: `String`
 Default: `''`
 
 The location of the file to be uploaded, relative to `Gruntfile.js`
@@ -62,14 +69,14 @@ The location of the file to be uploaded, relative to `Gruntfile.js`
 
 #### outputDir
 
-Type: `String`  
+Type: `String`
 Default: `''`
 
 The folder where translations should be downloaded to. This will extract the .zip from Crowdin and create subdirectories for each locale contained therein.
 
 #### renameFileTo
 
-Type: `String`  
+Type: `String`
 Default: `''`
 
 If provided will rename the download files from Crowdin to be renamed to something different than what they were uploaded as. The use case being you upload with a Git branch filename
