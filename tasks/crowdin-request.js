@@ -22,7 +22,8 @@ module.exports = function(grunt) {
       endpointUrl: 'https://api.crowdin.com/api',
       apiKey: this.options()['api-key'],
       projectIndentifier: this.options()['project-identifier'],
-      branch: this.options()['branch']
+      branch: this.options()['branch'],
+      targetLanguage: this.data.targetLanguage || 'all'
     });
 
     var done = this.async();
@@ -250,7 +251,8 @@ module.exports = function(grunt) {
    * @returns {String}
    */
   Crowdin.prototype.download = function () {
-    var url = this.formUrl('download/all.zip') + '?key=' + this.config.apiKey;
+    var file = this.config.targetLanguage + '.zip';
+    var url = this.formUrl('download/' + file) + '?key=' + this.config.apiKey;
     if (this.config.branch) {
       url += '&branch=' + this.config.branch;
     }

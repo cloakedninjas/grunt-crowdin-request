@@ -67,6 +67,14 @@ The location of the file to be uploaded, relative to `Gruntfile.js`
 
 ### Download
 
+#### targetLanguage
+
+Type: `String`
+Default: `'all'`
+
+Target language files to download. If not specified, 'all' will be used and all available languages will be downloaded.
+
+
 #### outputDir
 
 Type: `String`
