@@ -334,7 +334,7 @@ module.exports = function(grunt) {
                     parts = poFile.match(/(\w+)-(.+)\.po/);
 
                     // ensure we have a .po file
-                    if (parts.length === 3) {
+                    if (parts && parts.length === 3) {
 
                       newFilename = renameFileTo.replace('#LOCALE#', parts[2]);
 
